@@ -25,7 +25,7 @@ WG_LISTEN_PORT=51820\n\
 WG_PERSISTENT_KEEPALIVE=25\n\
 PEER_PUBLIC_KEY=CHAVE_PUBLICA_DO_PEER\n\
 PEER_ALLOWED_IPS=10.0.0.2/32\n\
-PEER_ENDPOINT=peer.example.com:51820\n' > /etc/wireguard/.env.example
+PEER_ENDPOINT=peer.example.com:51820\n' > /etc/wireguard/.env
 
 # Exponha a porta do WireGuard
 EXPOSE 51820/udp
