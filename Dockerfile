@@ -13,8 +13,7 @@ RUN apk update && apk add --no-cache \
     && rm -rf /var/cache/apk/*
 
 # Adicione o script de inicialização diretamente no Dockerfile
-RUN mkdir -p /usr/local/bin /etc/wireguard && \
-    chmod +x /usr/local/bin/entrypoint.sh
+RUN mkdir -p /usr/local/bin /etc/wireguard
 
 # Copie o arquivo de configuração wg0.conf
 COPY wg0.conf /etc/wireguard/wg0.conf
