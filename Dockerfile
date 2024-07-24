@@ -22,4 +22,4 @@ COPY wg0.conf /etc/wireguard/wg0.conf
 EXPOSE 13731/udp
 
 # Comando para iniciar o WireGuard
-CMD ["/usr/local/bin/entrypoint.sh"]
+CMD ["wg-quick up wg0"]
