@@ -12,23 +12,25 @@ RUN apk update && apk add --no-cache \
     bash \
     && rm -rf /var/cache/apk/*
 
-# Copie um script de inicialização para o contêiner
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+# Adicione o script de inicialização diretamente no Dockerfile
+RUN mkdir -p /usr/local/bin /etc/wireguard && \
+    echo '#!/bin/sh\n\
+    WG_CONF_DIR="/etc/wireguard"\n\
+    WG_CONF="$WG_CONF_DIR/wg0.conf"\n\
+    if [ ! -f "$WG_CONF" ]; then\n\
+        echo "Arquivo de configuração do WireGuard não encontrado em $WG_CONF_DIR."\n\
+        exit 1\n\
+    fi\n\
+    echo "Iniciando o WireGuard..."\n\
+    wg-quick up wg0\n\
+    tail -f /dev/null\n' > /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh
 
-# Torne o script de inicialização executável
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Crie um exemplo de arquivo .env
-RUN mkdir -p /etc/wireguard && \
-    echo 'WG_ADDRESS=10.0.0.1/24\n\
-WG_LISTEN_PORT=51820\n\
-WG_PERSISTENT_KEEPALIVE=25\n\
-PEER_PUBLIC_KEY=CHAVE_PUBLICA_DO_PEER\n\
-PEER_ALLOWED_IPS=10.0.0.2/32\n\
-PEER_ENDPOINT=peer.example.com:51820\n' > /etc/wireguard/.env
+# Copie o arquivo de configuração wg0.conf
+COPY wg0.conf /etc/wireguard/wg0.conf
 
 # Exponha a porta do WireGuard
-EXPOSE 51820/udp
+EXPOSE 13731/udp
 
 # Comando para iniciar o WireGuard
 CMD ["/usr/local/bin/entrypoint.sh"]
